@@ -1,4 +1,10 @@
-        
+pipeline {
+    
+    agent any
+    environment{
+        SONAR_HOME = tool "Sonar"
+    }
+    stages {
         stage("Code"){
             steps{
                 git url: "https://github.com/satish1137/node-todo-cicd-app.git" , branch: "master"
