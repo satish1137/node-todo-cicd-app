@@ -1,22 +1,14 @@
-
-pipeline {
-    
-    agent any
-    environment{
-        SONAR_HOME = tool "Sonar"
-    }
-    stages {
         
         stage("Code"){
             steps{
-                git url: "https://github.com/LondheShubham153/node-todo-cicd.git" , branch: "master"
+                git url: "https://github.com/satish1137/node-todo-cicd-app.git" , branch: "master"
                 echo "Code Cloned Successfully"
             }
         }
         stage("SonarQube Analysis"){
             steps{
                withSonarQubeEnv("Sonar"){
-                   sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=nodetodo -Dsonar.projectKey=node-to-do -X"
+                   sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=node-to-do -Dsonar.projectKey=node-to-do -X"
                }
             }
         }
@@ -46,7 +38,7 @@ pipeline {
         }
         stage("Push to Private Docker Hub Repo"){
             steps{
-                withCredentials([usernamePassword(credentialsId:"DockerHubCreds",passwordVariable:"dockerPass",usernameVariable:"dockerUser")]){
+                withCredentials([usernamePassword(credentialsId:"DockerHubCred",passwordVariable:"dockerPass",usernameVariable:"dockerUser")]){
                 sh "docker login -u ${env.dockerUser} -p ${env.dockerPass}"
                 sh "docker tag node-app-batch-6:latest ${env.dockerUser}/node-app-batch-6:latest"
                 sh "docker push ${env.dockerUser}/node-app-batch-6:latest"
